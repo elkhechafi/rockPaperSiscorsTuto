@@ -1,60 +1,68 @@
-const choices = [ 'paper', 'rock', 'scissors'];
-let computerRound = "";
+const choices = ['paper', 'rock', 'scissors'];
 let userScore = 0;
 let computerScore = 0;
 let roundsPlayed = 0;
-let winner;
 
-function playerSelection(playerSelection){
-  console.log(playerSelection);
-    playRound(playerSelection);
+function playerSelection(playerChoice) {
+    playRound(playerChoice);
 }
 
+function getComputerChoice() {
+    return choices[Math.floor(Math.random() * choices.length)];
+}
 
-
-function points(playerSelection, computerSelection){
-    // Determine the winner based on the rules
-    if (playerSelection === computerSelection) {
-      return "It's a tie!";
-    } else if (
-      (playerSelection === 'rock' && computerSelection === 'scissors') ||
-      (playerSelection === 'paper' && computerSelection === 'rock') ||
-      (playerSelection === 'scissors' && computerSelection === 'paper')
+function determineWinner(playerChoice, computerChoice) {
+    if (playerChoice === computerChoice) return "It's a tie!";
+    if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'paper' && computerChoice === 'rock') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper')
     ) {
-      return "You win!";
-    } else {
-      return "Computer wins!";
+        return "You win!";
     }
+    return "Computer wins!";
 }
-  
 
-function playRound(userChoice) {
-  const computerChoice = choices[Math.floor(Math.random() * 3)];
-  console.log('computer choosed ' +computerChoice);
-  const roundResult = points(userChoice, computerChoice);
-  document.getElementById('result').innerHTML += `Round ${roundsPlayed + 1}: ${roundResult}</br>`;
+function updateScores(result) {
+    if (result === "You win!") userScore++;
+    else if (result === "Computer wins!") computerScore++;
+}
 
-  if (roundResult === "You win!") {
-    userScore++;
-  } else if (roundResult === "Computer wins!") {
-    computerScore++;
-  }
+function displayRoundResult(playerChoice, computerChoice, result) {
+    const resultsDiv = document.getElementById('results');
+    const roundDiv = document.createElement('div');
+    roundDiv.className = 'round-result';
+    roundDiv.innerHTML = `Round ${roundsPlayed}: You chose ${playerChoice}, the opponent chose ${computerChoice}. ${result}`;
+    resultsDiv.appendChild(roundDiv);
+}
 
-  roundsPlayed++;
+function checkGameOver() {
+    if (userScore === 5 || computerScore === 5) {
+        const winner = userScore === 5 ? "You are" : "The computer is";
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `<br>${winner} the overall winner!`;
+        
+        // Remove appended round result divs
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
 
-  if (roundsPlayed === 5) {
-    // Determine the overall winner after five rounds
-    if (userScore > computerScore) {
-      document.getElementById('result').innerHTML += "<br>Congratulations! You are the overall winner!";
-    } else if (userScore < computerScore) {
-      document.getElementById('result').innerHTML += "<br>Sorry, the computer is the overall winner.";
-    } else {
-      document.getElementById('result').innerHTML += "<br>It's a tie! No overall winner.";
+        // Reset scores and rounds for a new game
+        userScore = 0;
+        computerScore = 0;
+        roundsPlayed = 0;
+
+        return true;
     }
+    return false;
+}
 
-    // Reset scores and rounds for a new game
-    userScore = 0;
-    computerScore = 0;
-    roundsPlayed = 0;
-  }
+function playRound(playerChoice) {
+    roundsPlayed++;
+    const computerChoice = getComputerChoice();
+    const result = determineWinner(playerChoice, computerChoice);
+    
+    updateScores(result);
+    displayRoundResult(playerChoice, computerChoice, result);
+    
+    checkGameOver();
 }

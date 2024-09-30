@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .result-container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .round-result {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
     
@@ -12,6 +26,8 @@
     <button class="playerInput" value="3" id="scissors" onclick="playerSelection(this.id)">scissors</button>
 
     <h1 id="result"></h1>
+
+    <div id="results"></div>
     <script src="./script.js"></script>
 </body>
 </html>
